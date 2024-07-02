@@ -18,4 +18,4 @@ spec:
         image: progrium/stress
         args:
         - --cpu
-        - "4"  # Number of CPU cores to stress, adjust as needed
+        - "0"  # Number of CPU cores to stress, adjust as needed
