@@ -153,3 +153,8 @@ Run command to load cpu to specific load as 90%
 ```sh
 stress-ng -c 0 -l 90
 ```
+#### To reset microk8s
+
+```sh
+microk8s reset
+```
