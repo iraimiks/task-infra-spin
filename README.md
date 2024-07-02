@@ -137,10 +137,6 @@ Explain: {pod="ubuntu"} – This specifies the exact name of the container pod t
 - Contact point 
     Use precreate contact point: telegram-send
 
-
-
-
-
 #### Prepare container for load cpu load testing (Task 4 Stress Test)
 
 In repor task-infra-spin/app (Using simple ubuntu container which running)
@@ -157,5 +153,3 @@ Run command to load cpu to specific load as 90%
 ```sh
 stress-ng -c 0 -l 90
 ```
-
-#### Prepare alerts 
