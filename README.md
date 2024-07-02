@@ -17,7 +17,7 @@ brew install ubuntu/microk8s/microk8s
 brew install helm
 ```
 
-#### install micro
+#### Install microk8s (Task 1 Prepare a Kubernetes Cluster)
 
 ```sh
 microk8s install
@@ -40,12 +40,10 @@ Enable addons
 
 ```sh
 microk8s enable dns
-microk8s enable rbac
-microk8s enable hostpath-storage
-microk8s enable metallb (10.64.140.43-10.64.140.49,192.168.0.105-192.168.0.111)
 ```
 
-#### Install argoCD use official guide (https://argo-cd.readthedocs.io/en/stable/getting_started/)
+#### Install argoCD (Task 2 Deploy Automation Stack ArgoCD)
+(https://argo-cd.readthedocs.io/en/stable/getting_started/)
 
 ```sh
 kubectl create namespace argocd
@@ -83,7 +81,7 @@ Get Password to connect to argoCD
 kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 --decode ; echo
 
 
-##### Check prometheus version
+##### Install Prometheus, Grafana (Task 3 Deploy Monitoring System)
 
 https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
 
@@ -105,8 +103,45 @@ Get password
 ```sh
 kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
+##### Prepare dashboards
 
-#### Prepare container for load cpu load testing
+cd monitoring/dashboards
+
+```sh
+kubectl apply -f simple_cpu_load_dash.yaml
+```
+
+##### Prepare Alerts
+
+https://grafana.com/blog/2023/12/28/how-to-integrate-grafana-alerting-and-telegram/
+
+Create new contact point (telegram-send)
+
+
+Go to Grafana -> Alerting -> Alertin rules -> + new alert rule
+
+- Enter alert rule name: 
+  CPU load 90%
+- Define query and alert condition -> code :
+Metric browser: 
+```sh
+(sum(rate(container_cpu_usage_seconds_total{pod="ubuntu"}[5m])) by (pod)) * 100 > 90
+```
+
+Explain: {pod="ubuntu"} – This specifies the exact name of the container pod to which the alert is assigned.
+
+- Set evaluation behavior: 
+    If not exits create Folder: custom_alert_cpu_rules
+    If not exits create Groupe: custom_alert
+
+- Contact point 
+    Use precreate contact point: telegram-send
+
+
+
+
+
+#### Prepare container for load cpu load testing (Task 4 Stress Test)
 
 In repor task-infra-spin/app (Using simple ubuntu container which running)
 Manual prepare stress test load for cpu using package stress-ng
@@ -122,3 +157,5 @@ Run command to load cpu to specific load as 90%
 ```sh
 stress-ng -c 0 -l 90
 ```
+
+#### Prepare alerts 
