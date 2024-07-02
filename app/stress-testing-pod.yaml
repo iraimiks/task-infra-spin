@@ -2,13 +2,14 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: ubuntu
-  namespace: app
+  labels:
+    app: ubuntu
 spec:
   containers:
-  - name: ubuntu
-    image: ubuntu:latest
-    # Just spin & wait forever
-    command: [ "/bin/bash", "-c", "--" ]
-    args: [ "while true; do sleep 30; done;" ]
-    securityContext:
-      privileged: true
+  - image: ubuntu
+    command:
+      - "sleep"
+      - "604800" # Keeps the container alive for 1 week
+    imagePullPolicy: IfNotPresent
+    name: ubuntu
+  restartPolicy: Always

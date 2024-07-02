@@ -73,7 +73,7 @@ kubectl get nodes -o wide
 Find NodePort
 Find ClusterIp
 
-https://<ClusterIp>:<NodePort>
+https://ClusterIp:NodePort
 
 Example:
 https://192.168.64.3:30471
@@ -89,16 +89,36 @@ https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
 
 ArgoCd is up and running prepare argocd deploy kube-prometheus-stack
 
-Open terminal repo
+Open terminal in project repo task-infra-spin
 
-task-infra-spin % kubectl apply -f prometheus-application.yaml
+```sh
+kubectl apply -f prometheus-application.yaml
+```
 
 Wait when all service is app in ArgoCD ui
 
+Use portforwarding for service/prometheus-grafana
+Open grafana dashboards
 
-#### Starting use prometheus-grafana ui on Local Machine
+Get password
 
-
-#### Get password for grafana dashboard
-
+```sh
 kubectl get secret --namespace monitoring prometheus-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+#### Prepare container for load cpu load testing
+
+In repor task-infra-spin/app (Using simple ubuntu container which running)
+Manual prepare stress test load for cpu using package stress-ng
+
+Connect to ubuntu pod 
+
+```sh
+apt update && apt install stress-ng
+```
+
+Run command to load cpu to specific load as 90%
+
+```sh
+stress-ng -c 0 -l 90
+```
