@@ -1,21 +1,12 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
+  name: ubuntu
   namespace: app
-  name: cpu-stress-test
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: cpu-stress-test
-  template:
-    metadata:
-      labels:
-        app: cpu-stress-test
-    spec:
-      containers:
-      - name: stress
-        image: progrium/stress
-        args:
-        - --cpu
-        - "0"  # Number of CPU cores to stress, adjust as needed
+  containers:
+  - name: ubuntu
+    image: ubuntu:latest
+    # Just spin & wait forever
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do sleep 30; done;" ]
